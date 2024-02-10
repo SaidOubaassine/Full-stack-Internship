@@ -19,6 +19,7 @@ function PostDetail(props) {
   const [error, setError] = useState(false);
   const post = useSelector((state) => state.posts.post);
   const dispatch = useDispatch();
+  
   const loadPost = useCallback(async () => {
     setError(null);
     setOnRefreshing(true);

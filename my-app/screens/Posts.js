@@ -18,8 +18,8 @@ function Posts({navigation}) {
   const [onRefreshing, setOnRefreshing] = useState(false);
   const [error, setError] = useState(false);
   const posts = useSelector((state) => state.posts.posts);
-  const postsFilter = posts.filter((post) => post.UserId <= pagination);
   const dispatch = useDispatch();
+  
   
   const loadPosts = useCallback(async () => {
     setError(null);
@@ -42,12 +42,11 @@ function Posts({navigation}) {
     <FlatList
       onRefresh={loadPosts}
       refreshing={onRefreshing}
-      data={postsFilter}
+      data={posts!=undefined ? posts.filter((post) => post.UserId <= pagination): []}
       keyExtractor={(item) => item.UserId}
       renderItem={(itemData) => (
         <View key={itemData.item.UserId} style={styles.item}>
          <Pressable onPress={()=>{
-          posts = []
           navigation.navigate("Detail", {
             Id: itemData.item.Id
           })
@@ -56,6 +55,9 @@ function Posts({navigation}) {
          <Text>UserId: {itemData.item.UserId}</Text>
          <Text>Title: {itemData.item.Title}</Text>
          <Text>Body: {itemData.item.Body}</Text>
+         <Button title="delete" color={"red"} onPress={()=>{
+        
+         }}/>
          </Pressable>
         </View>
       )}

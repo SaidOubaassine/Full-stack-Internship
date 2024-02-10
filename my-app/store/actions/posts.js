@@ -1,5 +1,6 @@
 export const SET_POSTS = "SET_POSTS";
 export const SET_POST = "SET_POST";
+export const DELETE_POST = "DELETE_POST";
 
 import Post from "../../models/posts";
 
@@ -58,3 +59,26 @@ export const fetchPosts = () => {
       }
     };
   };
+
+  export const deletePost = (Id) => {
+    return async (dispatch) => {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/1${Id}`,
+        {
+          method: "DELETE",
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(
+          "Something went wrong with deleting the data on the server!"
+        );
+      }
+  
+      dispatch({
+        type: DELETE_POST,
+        id: Id,
+      });
+    };
+  };
+  
