@@ -11,11 +11,11 @@ export default (state = initialState, action) => {
         case SET_POSTS:
             return {
                 posts : action.posts
-            }
+            };
         case SET_POST:
             return {
                 post: action.post
-            }
+            }; 
     }
     return state;
 }

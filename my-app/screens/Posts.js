@@ -35,22 +35,7 @@ function Posts({navigation}) {
     loadPosts().then(() => setIsLoading(false));
   }, [dispatch, loadPosts]);
 
- /* if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="black" />
-      </View>
-    );
-  }
-
-  if (!isLoading && posts.length === 0) {
-    return (
-      <View style={styles.centered}>
-        <Text>No products found!</Text>
-      </View>
-    );
-  }*/
-
+ 
   return (
     <FlatList
       onRefresh={loadPosts}

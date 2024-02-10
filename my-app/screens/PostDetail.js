@@ -19,7 +19,6 @@ function PostDetail(props) {
   const [error, setError] = useState(false);
   const post = useSelector((state) => state.posts.post);
   const dispatch = useDispatch();
-  console.log(Id)
   const loadPost = useCallback(async () => {
     setError(null);
     setOnRefreshing(true);
@@ -36,17 +35,55 @@ function PostDetail(props) {
     loadPost().then(() => setIsLoading(false));
   }, [dispatch, loadPost]);
 
+
+  
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>An error occurred!</Text>
+        <Button
+          title="Try again"
+          onPress={loadPost}
+          color={"black"}
+        />
+      </View>
+    );
+  }
+   if (isLoading) {
+  return (
+    <View style={styles.centered}>
+      <ActivityIndicator size="large" color="black" />
+    </View>
+  );
+}
+
+if (!isLoading && post === undefined) {
+  return (
+    <View style={styles.centered}>
+      <Text>No products found!</Text>
+    </View>
+  );
+}
+
   return (
     <View>
-        <Text>Detail</Text>
-        <Button title="click" onPress={()=>{
-          console.log(post)}}/>
+        <Text>title: {post.title}</Text>
+        <Text>body: {post.body}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  item:{
+    margin: 20,
+    backgroundColor: "green"
+  }
 });
 
 export default PostDetail;
