@@ -6,31 +6,85 @@ import {
   View,
   Text,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as postsActions from "../store/actions/posts"
 
-function Posts() {
+function Posts({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [onRefreshing, setOnRefreshing] = useState(false);
   const [error, setError] = useState(false);
   const posts = useSelector((state) => state.posts.posts);
   const dispatch = useDispatch();
   
-  
+  const loadPosts = useCallback(async () => {
+    setError(null);
+    setOnRefreshing(true);
+    try {
+      await dispatch(postsActions.fetchPosts());
+    } catch (err) {
+      setError(err.message);
+    }
+    setOnRefreshing(false);
+  }, [dispatch]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    loadPosts().then(() => setIsLoading(false));
+  }, [dispatch, loadPosts]);
 
+ /* if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    );
+  }
+
+  if (!isLoading && posts.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No products found!</Text>
+      </View>
+    );
+  }*/
 
   return (
-    <View>
-      <Button title="Click" onPress={async ()=>{
-      await dispatch(postsActions.fetchPosts());
-      console.log(posts)
-    }}>
-    </Button>
-    </View>
+    <FlatList
+      onRefresh={loadPosts}
+      refreshing={onRefreshing}
+      data={posts}
+      keyExtractor={(item) => item.id}
+      renderItem={(itemData) => (
+        <View key={itemData.index} style={styles.item}>
+         <Pressable onPress={()=>{
+          navigation.navigate("Detail", {
+            Id: itemData.item.Id
+          })
+         }}>
+         <Text>Id: {itemData.item.Id}</Text>
+         <Text>UserId: {itemData.item.UserId}</Text>
+         <Text>Title: {itemData.item.Title}</Text>
+         <Text>Body: {itemData.item.Body}</Text>
+         </Pressable>
+        </View>
+      )}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  item:{
+    margin: 20,
+    backgroundColor: "green"
+  }
+});
 
 export default Posts;
