@@ -11,12 +11,14 @@ import {
 import { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as postsActions from "../store/actions/posts"
+import pagination from "../settings/pagination";
 
 function Posts({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [onRefreshing, setOnRefreshing] = useState(false);
   const [error, setError] = useState(false);
   const posts = useSelector((state) => state.posts.posts);
+  const postsFilter = posts.filter((post) => post.UserId <= pagination);
   const dispatch = useDispatch();
   
   const loadPosts = useCallback(async () => {
@@ -40,11 +42,12 @@ function Posts({navigation}) {
     <FlatList
       onRefresh={loadPosts}
       refreshing={onRefreshing}
-      data={posts}
-      keyExtractor={(item) => item.id}
+      data={postsFilter}
+      keyExtractor={(item) => item.UserId}
       renderItem={(itemData) => (
-        <View key={itemData.index} style={styles.item}>
+        <View key={itemData.item.UserId} style={styles.item}>
          <Pressable onPress={()=>{
+          posts = []
           navigation.navigate("Detail", {
             Id: itemData.item.Id
           })
