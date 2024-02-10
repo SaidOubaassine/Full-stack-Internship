@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import NavigationContainer from "./navigation/navigationContainer";
+import { Provider } from "react-redux";
+import { combineReducers } from "redux";
+import postsReducer from "./store/reducers/posts";
+import "react-native-gesture-handler";
+import { configureStore } from "@reduxjs/toolkit";
 
-export default function App() {
+const rootReducer = combineReducers({
+  posts: postsReducer,
+});
+const store = configureStore({ 
+  reducer: rootReducer, 
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+    serializableCheck: false,
+  }),})
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
